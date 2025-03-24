@@ -1,5 +1,8 @@
 import { Routes } from "../types/routeType";
 
 export const routes: Routes = {
-    HOME: '/',
-}
+  HOME: "/",
+  LOGIN: "/login",
+  REGISTER: "/register",
+  NOT_FOUND: "*",
+};
