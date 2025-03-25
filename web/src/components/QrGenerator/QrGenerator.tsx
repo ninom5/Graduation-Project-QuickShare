@@ -12,15 +12,18 @@ export const QrGenerator = () => {
     const id = uuidv4();
     setConnectionId(id);
     setConnectionURL(`${baseURL}/connect/${connectionId}`);
+    console.log("Connection URL:", connectionURL);
+    console.log("Connection URL:", connectionId);
   }, []);
 
   useEffect(() => {
     if (!connectionURL) return;
 
-    const socket = connectSocket(connectionURL);
+    const socket = connectSocket();
+    socket.connect();
 
     return () => {
-      // socket.disconnect();
+      socket.disconnect();
     };
   }, [connectionURL]);
 

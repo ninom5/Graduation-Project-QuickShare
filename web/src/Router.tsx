@@ -1,5 +1,11 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { HomePage, Layout, LoginPage, ConnectDevicesPage } from "@pages/index";
+import {
+  HomePage,
+  Layout,
+  LoginPage,
+  ConnectDevicesPage,
+  RegisterPage,
+} from "@pages/index";
 import { routes } from "@routes/routes";
 
 export const Router = () => {
@@ -15,7 +21,7 @@ export const Router = () => {
           {/* <Rout path={routes.NOT_FOUND} element={<NotFoundPage />} /> */}
         </Route>
         <Route path={routes.LOGIN} element={<LoginPage />} />
-        {/* <Route path={routes.REGISTER} element={<RegisterPage />}/> */}
+        <Route path={routes.REGISTER} element={<RegisterPage />} />
       </Routes>
     </BrowserRouter>
   );
