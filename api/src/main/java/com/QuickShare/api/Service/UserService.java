@@ -1,12 +1,11 @@
 package com.QuickShare.api.Service;
 
-import com.QuickShare.api.Entity.User;
+import com.QuickShare.api.Models.User;
 import com.QuickShare.api.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -21,5 +20,14 @@ public class UserService {
     public User findByEmail(String email)
     {
         return userRepository.findByEmail(email);
+    }
+
+    public User createUser(User user){return userRepository.save(user);}
+
+    public boolean doesEmailExist(String email)
+    {
+        User user = userRepository.findByEmail(email);
+
+        return (user != null);
     }
 }

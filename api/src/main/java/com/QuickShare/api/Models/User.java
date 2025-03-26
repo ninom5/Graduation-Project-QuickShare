@@ -1,4 +1,4 @@
-package com.QuickShare.api.Entity;
+package com.QuickShare.api.Models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
@@ -30,12 +32,24 @@ public class User{
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
+
     private String phone;
-    private Date dateOfBirth;
-    private Date createdAt;
-    private Date updatedAt;
+    private LocalDate dateOfBirth;
+
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    public void onCreate()
+    {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void onUpdate()
+    {
+        updatedAt = LocalDateTime.now();
+    }
 }
 
-enum Gender{
-    M, F
-}

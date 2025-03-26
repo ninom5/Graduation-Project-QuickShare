@@ -1,6 +1,5 @@
-package com.QuickShare.api.Entity;
+package com.QuickShare.api.Models;
 
-import com.QuickShare.api.Entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

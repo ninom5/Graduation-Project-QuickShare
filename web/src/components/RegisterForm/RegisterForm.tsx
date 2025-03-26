@@ -5,8 +5,8 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { registrationValidation } from "utils/registrationValidation";
 import { toast } from "react-toastify";
-import axios from "axios";
 import { axiosAPI } from "utils/axiosAPI";
+import { AxiosError } from "axios";
 
 export const RegisterForm = () => {
   const [registerData, setRegisterData] = useState({
@@ -31,17 +31,26 @@ export const RegisterForm = () => {
     }
 
     try {
-      const response = await axiosAPI.post("/auth/register", registerData);
-      console.log(response);
+      const response = await axiosAPI.post("users/auth/register", registerData);
+
       if (response.status !== 200) {
         toast.error(response.data.message);
         return;
       }
 
+      console.log(response.data);
+
       toast.success("Registration successful");
     } catch (err) {
-      console.error(err);
-      toast.error("An error occurred");
+      if (err instanceof AxiosError) {
+        console.error(err);
+        toast.error(
+          `An error occurred: ${err.response?.data?.message || err.message}`
+        );
+      } else {
+        console.error(err);
+        toast.error("An unexpected error occurred");
+      }
     }
 
     setRegisterData({
