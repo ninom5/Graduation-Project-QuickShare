@@ -1,11 +1,11 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import {
   HomePage,
-  Layout,
   LoginPage,
   ConnectDevicesPage,
   RegisterPage,
 } from "@pages/index";
+import { Layout } from "layouts";
 import { routes } from "@routes/routes";
 
 export const Router = () => {
