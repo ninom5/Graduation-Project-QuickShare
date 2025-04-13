@@ -8,10 +8,10 @@ export const QrGenerator = () => {
   const [connectionURL, setConnectionURL] = useState<string>("");
 
   const socketRef = useRef<WebSocket | null>(null);
-  console.log(import.meta.env);
-  // const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
+  // console.log(import.meta.env);
+  // const baseURL = import.meta.env.VITE_CONNECTION_URL;
   const baseURL = "http://192.168.1.101:5173";
-  console.log(baseURL);
+  // console.log(baseURL);
 
   useEffect(() => {
     const id = uuidv4();
@@ -25,33 +25,39 @@ export const QrGenerator = () => {
   }, [connectionId]);
 
   useEffect(() => {
-    if (!connectionURL) return;
+    if (!connectionURL || socketRef.current) return;
 
     const socket = new WebSocket("ws://localhost:8080/ws");
+    console.log("Attempting to create WebSocket:", socket);
     socketRef.current = socket;
 
-    socket.onopen = () => {
+    const onOpen = () => {
       console.log("Connection opened");
-
-      socket.send(JSON.stringify({ connectionId }));
     };
 
-    socket.onclose = () => {
+    const onClose = () => {
       console.log("Connection closed");
     };
 
-    socket.onmessage = (event) => {
+    const onMessage = (event: MessageEvent) => {
       console.log(`Message: ${event?.data}`);
     };
 
-    socket.onerror = (error) => {
+    const onError = (error: Event) => {
       console.error(`Web socket error: ${error}`);
       toast.error("Web socket error");
     };
 
-    return () => {
-      socket.close();
-    };
+    socket.addEventListener("open", onOpen);
+    socket.addEventListener("close", onClose);
+    socket.addEventListener("message", onMessage);
+    socket.addEventListener("error", onError);
+
+    // return () => {
+    //   setTimeout(() => {
+    //     if (socket.readyState !== WebSocket.CLOSED) socket.close();
+    //   }, 200);
+    // };
   }, [connectionURL]);
 
   return (
