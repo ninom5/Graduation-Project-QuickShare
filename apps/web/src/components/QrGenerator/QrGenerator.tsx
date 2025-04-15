@@ -9,8 +9,7 @@ export const QrGenerator = () => {
 
   const socketRef = useRef<WebSocket | null>(null);
   // console.log(import.meta.env);
-  // const baseURL = import.meta.env.VITE_CONNECTION_URL;
-  const baseURL = "http://192.168.1.101:5173";
+  const baseURL = import.meta.env.VITE_CONNECTION_URL;
   // console.log(baseURL);
 
   useEffect(() => {
@@ -28,7 +27,6 @@ export const QrGenerator = () => {
     if (!connectionURL || socketRef.current) return;
 
     const socket = new WebSocket("ws://localhost:8080/ws");
-    console.log("Attempting to create WebSocket:", socket);
     socketRef.current = socket;
 
     const onOpen = () => {
