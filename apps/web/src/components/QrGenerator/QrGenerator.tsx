@@ -8,9 +8,8 @@ export const QrGenerator = () => {
   const [connectionURL, setConnectionURL] = useState<string>("");
 
   const socketRef = useRef<WebSocket | null>(null);
-  // console.log(import.meta.env);
   const baseURL = import.meta.env.VITE_CONNECTION_URL;
-  // console.log(baseURL);
+  console.log(baseURL);
 
   useEffect(() => {
     const id = uuidv4();

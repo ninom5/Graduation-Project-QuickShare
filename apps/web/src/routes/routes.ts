@@ -5,5 +5,6 @@ export const routes: Routes = {
   LOGIN: "/login",
   REGISTER: "/register",
   CONNECT_DEVICES: "/connect",
+  CONNECT_DEVICES_SOCKET: "/connect/:socketId",
   NOT_FOUND: "*",
 };
