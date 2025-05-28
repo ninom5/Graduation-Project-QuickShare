@@ -2,14 +2,16 @@ import { v4 as uuidv4 } from "uuid";
 import { QRCodeSVG } from "qrcode.react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export const QrGenerator = () => {
   const [connectionId, setConnectionId] = useState<string>("");
   const [connectionURL, setConnectionURL] = useState<string>("");
 
+  const navigate = useNavigate();
+
   const socketRef = useRef<WebSocket | null>(null);
   const baseURL = import.meta.env.VITE_CONNECTION_URL;
-  console.log(baseURL);
 
   useEffect(() => {
     const id = uuidv4();
@@ -25,30 +27,31 @@ export const QrGenerator = () => {
   useEffect(() => {
     if (!connectionURL || socketRef.current) return;
 
-    const socket = new WebSocket("ws://localhost:8080/ws");
+    const socket = new WebSocket(`ws://${import.meta.env.VITE_IP}:8080/ws`);
     socketRef.current = socket;
 
-    const onOpen = () => {
+    socket.onopen = () => {
       console.log("Connection opened");
     };
 
-    const onClose = () => {
-      console.log("Connection closed");
+    socket.onmessage = (event: MessageEvent) => {
+      const message = event.data;
+      console.log(`Message: ${message}`);
+
+      if (message === "mobile_connected") {
+        navigate(`/connect/${connectionId}`);
+        toast.success("Successfully connected devices");
+      }
     };
 
-    const onMessage = (event: MessageEvent) => {
-      console.log(`Message: ${event?.data}`);
-    };
-
-    const onError = (error: Event) => {
+    socket.onerror = (error: Event) => {
       console.error(`Web socket error: ${error}`);
       toast.error("Web socket error");
     };
 
-    socket.addEventListener("open", onOpen);
-    socket.addEventListener("close", onClose);
-    socket.addEventListener("message", onMessage);
-    socket.addEventListener("error", onError);
+    socket.onclose = () => {
+      console.log("Connection closed");
+    };
 
     // return () => {
     //   setTimeout(() => {
