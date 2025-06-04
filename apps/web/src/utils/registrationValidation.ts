@@ -1,4 +1,4 @@
-import { RegisterDataType } from "../types/registerDataType";
+import { RegisterDataType } from "../types/registerData.type";
 import { emailValidation } from "./emailValidation";
 
 export const registrationValidation = (registerData: RegisterDataType) => {

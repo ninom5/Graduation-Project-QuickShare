@@ -1,2 +1,3 @@
-export * from "./routeType";
-export * from "./registerDataType";
+export * from "./route.type";
+export * from "./registerData.type";
+export * from "./errorResponse.type";
