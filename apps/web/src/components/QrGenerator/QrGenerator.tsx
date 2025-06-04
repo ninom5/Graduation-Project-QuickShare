@@ -27,7 +27,9 @@ export const QrGenerator = () => {
   useEffect(() => {
     if (!connectionURL || socketRef.current) return;
 
-    const socket = new WebSocket(`ws://${import.meta.env.VITE_IP}:8080/ws`);
+    const socket = new WebSocket(
+      `ws://${import.meta.env.VITE_IP}:8080/ws?connectionId=${connectionId}`
+    );
     socketRef.current = socket;
 
     socket.onopen = () => {
@@ -39,6 +41,7 @@ export const QrGenerator = () => {
       console.log(`Message: ${message}`);
 
       if (message === "mobile_connected") {
+        console.log(message);
         navigate(`/connect/${connectionId}`);
         toast.success("Successfully connected devices");
       }
@@ -56,7 +59,7 @@ export const QrGenerator = () => {
     // return () => {
     //   setTimeout(() => {
     //     if (socket.readyState !== WebSocket.CLOSED) socket.close();
-    //   }, 200);
+    //   }, 25000);
     // };
   }, [connectionURL]);
 
