@@ -16,7 +16,7 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api/sessions")
 public class SessionController {
-    private static WebSocketHandler handler;
+    private final WebSocketHandler handler;
 
     @Autowired
     public SessionController(WebSocketHandler handler) {
@@ -26,6 +26,7 @@ public class SessionController {
     @PostMapping("/connect/{connectionId}")
     public ResponseEntity<?> connect(@PathVariable String connectionId, HttpSession session) {
         System.out.println("Connecting to " + connectionId);
+
         try{
             handler.notifyClient(connectionId, "mobile_connected");
             System.out.println("sus " + connectionId);

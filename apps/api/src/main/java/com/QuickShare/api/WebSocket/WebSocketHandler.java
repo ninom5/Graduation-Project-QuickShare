@@ -18,6 +18,10 @@ public class WebSocketHandler extends TextWebSocketHandler {
     private final ObjectMapper mapper = new ObjectMapper();
 
     public void notifyClient(String connectionId, String message) throws IOException {
+        System.out.println("SESSIONS: " + sessions);
+        System.out.println("notify SESSIONS ID: " + System.identityHashCode(sessions));
+        System.out.println("All keys in sessions: " + sessions.keySet());
+
         WebSocketSession session = sessions.get(connectionId);
         System.out.println("session: " + session + " message: " + message + " connectionId: " + connectionId);
         if(session != null && session.isOpen()) {
@@ -30,17 +34,24 @@ public class WebSocketHandler extends TextWebSocketHandler {
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         System.out.println("Connected");
         System.out.println("session: " + session + " sessionId: " + session.getId());
+
         String connectionId = getConnectionIdFromQuery(session.getUri());
+
+        System.out.println("connectionId: " + connectionId);
         if (connectionId != null) {
+            System.out.println("after SESSIONS ID: " + System.identityHashCode(sessions));
+
             sessions.put(connectionId, session);
             System.out.println("WebSocket opened for: " + connectionId);
         }
     }
 
     private String getConnectionIdFromQuery(URI uri) {
+        System.out.println("uri: " + uri);
         if (uri == null) return null;
 
-        String query = uri.getQuery(); // e.g., connectionId=abc-123
+        String query = uri.getQuery();
+        System.out.println("query: " + query);
         if (query == null) return null;
 
         for (String param : query.split("&")) {
