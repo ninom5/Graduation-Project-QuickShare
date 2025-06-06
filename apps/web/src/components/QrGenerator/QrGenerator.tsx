@@ -3,11 +3,13 @@ import { QRCodeSVG } from "qrcode.react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { useSocketContext } from "hooks";
 
 export const QrGenerator = () => {
   const [connectionId, setConnectionId] = useState<string>("");
   const [connectionURL, setConnectionURL] = useState<string>("");
 
+  const { dispatch } = useSocketContext();
   const navigate = useNavigate();
 
   const socketRef = useRef<WebSocket | null>(null);
@@ -31,6 +33,11 @@ export const QrGenerator = () => {
       `ws://${import.meta.env.VITE_IP}:8080/ws?connectionId=${connectionId}`
     );
     socketRef.current = socket;
+
+    dispatch({
+      type: "ADD_SOCKET",
+      payload: { key: connectionId, socket: socket },
+    });
 
     socket.onopen = () => {
       console.log("Connection opened");

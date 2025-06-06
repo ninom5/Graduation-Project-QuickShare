@@ -1,9 +1,18 @@
 import { useSession } from "api";
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-export const MobileFileShare = ({ guid }: { guid: string | undefined }) => {
+export const MobileFileShare = ({
+  guid,
+  socket,
+}: {
+  guid: string | undefined;
+  socket: WebSocket;
+}) => {
+  const [file, setFile] = useState<File | null>(null);
+
   const { mutate: session } = useSession();
+
   useEffect(() => {
     if (!guid) {
       toast.error("Error getting guid");
@@ -11,23 +20,48 @@ export const MobileFileShare = ({ guid }: { guid: string | undefined }) => {
     }
 
     session(guid);
-    // if (!guid) return;
-    // toast.success("fetching...");
-    // fetch(
-    //   `http://${import.meta.env.VITE_IP}:8080/api/sessions/connect/${guid}`,
-    //   {
-    //     method: "POST",
-    //   }
-    // )
-    //   .then((res) => {
-    //     if (!res.ok) throw new Error("Failed to notify server");
-    //     console.log("Mobile connected, backend notified.");
-    //     toast.success("Success");
-    //   })
-    //   .catch((err) => {
-    //     console.error("Error notifying server:", err);
-    //   });
   }, [guid]);
 
-  return <div>mobile</div>;
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target?.files?.[0];
+
+    if (!file) return;
+
+    setFile(file);
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!file) {
+      toast.error("File not added");
+      return;
+    }
+
+    socket.send(file);
+  };
+
+  return (
+    <section>
+      <h2>mobile</h2>
+
+      <div>
+        <h3>File input</h3>
+        <p>Add files</p>
+
+        <form onSubmit={(e) => handleSubmit(e)}>
+          <label htmlFor="fileInput">Add File</label>
+          <input
+            name="fileInput"
+            id="fileInput"
+            type="file"
+            onChange={(e) => handleChange(e)}
+            required
+          />
+
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+    </section>
+  );
 };
